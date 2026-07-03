@@ -1,0 +1,19 @@
+# 环境变量（包含敏感 Key）
+.env
+
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Chroma 向量数据库
+Chroma_db/
+
+# IDE
+.idea/
+.vscode/
+
+# 临时文件
+*.tmp
+.DS_Store
