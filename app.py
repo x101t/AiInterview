@@ -221,6 +221,8 @@ def run_app():
                 llm = get_llm()
                 prompt_text = eval_prompt.format(
                     question=current_q,
+                    answer_reference=reference,
+                    user_answer=user_answer,
                 )
                 response = llm.invoke(prompt_text)
                 st.markdown(response.content)
