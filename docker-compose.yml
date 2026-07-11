@@ -1,0 +1,25 @@
+# ============================================================
+# AI 面试官 一键启动
+# 启动：docker-compose up -d
+# 停止：docker-compose down
+# ============================================================
+
+version: "3.8"
+
+services:
+  ai-interview:
+    build: .
+    container_name: ai-interview
+    restart: unless-stopped
+    ports:
+      - "8501:8501"
+    environment:
+      ZHIPUAI_KEY: ${ZHIPUAI_KEY}
+      ZHIPUAI_BASE_URL: ${ZHIPUAI_BASE_URL:-https://open.bigmodel.cn/api/paas/v4}
+      DEEPSEEK_KEY: ${DEEPSEEK_KEY:-}
+      DEEPSEEK_BASE_URL: ${DEEPSEEK_BASE_URL:-https://api.deepseek.com}
+    volumes:
+      # Chroma 向量数据库持久化
+      - ./Chroma_db:/app/Chroma_db
+      # 题库文件
+      - ./questions.JSON:/app/questions.JSON

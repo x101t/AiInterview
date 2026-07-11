@@ -41,7 +41,7 @@ def load_qa_db():
 def init_vectorstore():
     """
     加载题库文档并存入 Chroma，返回 vectorstore 实例。
-    使用智谱 AI Embedding API（云端，无需下载模型）。
+    使用智谱 AI Embedding API
     """
     # 智谱 AI Embedding，API 兼容 OpenAI 格式
     # model: embedding-2（智谱 embedding 模型）
@@ -154,7 +154,8 @@ def evaluate_answer(question: str, user_answer: str, reference_answer: str) -> s
 2. 候选人回答深入、有见地 → 随机决定，约40%追问深入细节，约60%换下一题
 3. 候选人回答基本正确但浅 → 动作:下一题，方向:换相关但不完全相同的方向
 4. 不要连续给"追问"——如果上一轮已经追问过了，这次必须下一题
-5. 只有明确要求结束时才用"结束"动作"""
+5. 候选人回复"结束""面试就到这吧"等表示面试结束的字眼,立刻结束面试
+"""
     response = llm.invoke(prompt)
     return response.content
 
@@ -162,8 +163,8 @@ def evaluate_answer(question: str, user_answer: str, reference_answer: str) -> s
 @tool
 def adjust_difficulty(scores:str) -> str:
     """
-    根据历史得分调整难度.输入格式"8,7,9".
-    返回"easy","medium"或"hard".
+    根据历史得分调整难度.输入格式"8,7,9"
+    返回"easy","medium"或"hard"
     """
     try:
         score_list = [int(s.strip()) for s in scores.split(",")if s.strip()]
@@ -240,7 +241,7 @@ def build_agent(resume_text: str, job_desc: str, difficulty: str, max_questions:
 - 回答正确时，随机决定下一步（不要总是一个模式）：
   - 约 40% 概率：追问一个更深的问题（考察深度）
   - 约 60% 概率：直接换下一道题（考察知识广度）
-- 避免连续追问超过 2 次
+- 避免连续追问超过2次,也就是追问最多只能追问一次,无论回答的怎么样都换下一题
 
 【重要禁忌 —— 违反即面试事故】
 - 面试过程中绝对不要把评分透露给候选人！评分是内部参考
